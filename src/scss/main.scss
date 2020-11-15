@@ -1,13 +1,5 @@
 @import "~normalize.css";
+@import url("https://fonts.googleapis.com/css2?family=Indie+Flower&family=Roboto&display=swap");
 
 @import "_variables";
-@import "modules/hello.scss";
-
-body {
-  background: $wtf;
-  color: #361d2eff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-}
+@import "_layout";

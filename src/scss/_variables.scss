@@ -1,1 +1,50 @@
-$wtf: #5b8c5aff;
+:root {
+  --color-bgc-green: #5b8c5a;
+  --color-bgc-silver: #fefefe;
+  --color-grey: #2d2e2d;
+  --color-red: #ea3546;
+  --color-grey-dark: #cfd1d0;
+  --color-grey-light: #e5e7e3;
+
+  --font-primary: "Roboto", sans-serif;
+  --font-header: "Indie Flower", cursive;
+
+  --shadow-box-big: 0 1rem 1.4rem rgba(68, 70, 85, 0.4);
+  --shadow-button: 0 1rem 2rem rgba(68, 70, 85, 0.2);
+  --shadow-button-active: 0 0.5rem 1rem rgba(68, 70, 85, 0.2);
+
+  --line-grey-light: 1px solid var(--color-grey-light);
+}
+$bp-big: 96em; //1536px
+$bp-big-less: 85.3em; //1366px
+$bp-largest: 80em; //1280px
+$bp-large: 68.75em; //1100px
+$bp-large-mobile: 64em; //1024px
+$bp-medium: 56.25em; //900px
+$bp-medium-grid: 52.2em; //835px
+$bp-medium-tablet: 46.875em; //750px
+$bp-small: 41.25em; //660px
+$bp-smallest: 30.94em; //496px
+$bp-tiny-big: 26em; //416px
+$bp-tiny: 23.44em; //375px użyte w h1
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: min(max(0.8rem, 1.2vw), 1.3rem);
+  @supports (font-size: clamp(0.8rem, 1.2vw, 1.3rem)) {
+    font-size: clamp(0.8rem, 1.2vw, 1.3rem);
+  }
+  scroll-behavior: smooth;
+}
+
+::selection {
+  background-color: var(--color-bgc-green);
+  color: var(--color-bgc-silver);
+}

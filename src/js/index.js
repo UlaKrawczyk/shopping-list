@@ -6,36 +6,50 @@ import "../scss/main.scss";
 // registerSW();
 
 /* place your code below */
-
-const form1 = document.querySelector(".shopping-list__form1--js");
+const forms = document.querySelectorAll(".shopping-list__form");
 const list1 = document.querySelector(".shopping-list__list1--js");
+const list2 = document.querySelector(".shopping-list__list2--js");
+const list3 = document.querySelector(".shopping-list__list3--js");
+const lists = document.querySelectorAll(".shopping-list__list");
 
 //an array to hold the state of app
-let items = [];
+let items1 = [];
+let items2 = [];
+let items3 = [];
 
-//submit handler - what happens when sb fullfill the form
 function handleSubmit(e) {
   e.preventDefault();
-  console.log(e.currentTarget);
-  console.log(e.target);
   const name = e.currentTarget.item.value;
-  //.item - bo currentTarget to form i musimy zejść do inputa, który ma określony atrybut name='item'
-  if (!name) return; //empty enter won't add empty lines (or add attr    required in html to the input field)
+  if (!name) return;
+
   const item = {
     name: name,
     id: Date.now(),
     complete: false,
   };
-  items.push(item); //push the item into state
+
+  const whichForm = e.target.classList.value;
+  if (whichForm.includes("form1")) {
+    items1.push(item);
+    console.log("wypełniasz kosmetyki");
+  } else if (whichForm.includes("form2")) {
+    items2.push(item);
+    console.log("wypełniasz leki");
+  } else {
+    items3.push(item);
+    console.log("wypełniasz chemia");
+  }
   e.target.reset(); //e.currentTarget.item.value = ""; - clear the form
-  //displayItems(); - instead of this, we fire off a custom event that will tell sb who cares that items have been updated
-  list1.dispatchEvent(new CustomEvent("itemsUpdated"));
+  lists.forEach((list) => list.dispatchEvent(new CustomEvent("itemsUpdated")));
 }
 
-function displayItems() {
-  const html = items
-    .map(
-      (item) => `<li class="shopping-list__item">
+function displayItems(e) {
+  const whichList = e.target.classList.value;
+
+  if (whichList.includes("list1")) {
+    const html = items1
+      .map(
+        (item) => `<li class="shopping-list__item">
       <input 
         type="checkbox" 
         id="check + ${item.id}"
@@ -53,48 +67,129 @@ function displayItems() {
         aria-label="remove ${item.name}"
       >&times;</button>
       </li>`
-    ) //value id w buttnie i inpucie potrzebne do nasłuchiwania
-    //${item.complete ? "checked" : ""} - aby ustawić w html czy checkbox jest zaznaczony czy nie, w obiekcie mamy info
-    .join("");
-  list1.innerHTML = html;
+      )
+      .join("");
+    list1.innerHTML = html;
+  } else if (whichList.includes("list2")) {
+    const html = items2
+      .map(
+        (item) => `<li class="shopping-list__item">
+      <input 
+        type="checkbox" 
+        id="check + ${item.id}"
+        value="${item.id}"
+        ${item.complete ? "checked" : ""}
+      >
+      <label 
+        class="itemName"
+        for="check + ${item.id}"
+      >
+      <span class="shopping-list__newCheckbox"></span>
+      ${item.name}</label>
+      <button 
+        value="${item.id}" 
+        aria-label="remove ${item.name}"
+      >&times;</button>
+      </li>`
+      )
+      .join("");
+    list2.innerHTML = html;
+  } else {
+    const html = items3
+      .map(
+        (item) => `<li class="shopping-list__item">
+      <input 
+        type="checkbox" 
+        id="check + ${item.id}"
+        value="${item.id}"
+        ${item.complete ? "checked" : ""}
+      >
+      <label 
+        class="itemName"
+        for="check + ${item.id}"
+      >
+      <span class="shopping-list__newCheckbox"></span>
+      ${item.name}</label>
+      <button 
+        value="${item.id}" 
+        aria-label="remove ${item.name}"
+      >&times;</button>
+      </li>`
+      )
+      .join("");
+    list3.innerHTML = html;
+  }
 }
-function mirrorToLocalStorage() {
-  localStorage.setItem("items", JSON.stringify(items));
+function mirrorToLocalStorage(e) {
+  const whichList = e.target.classList.value;
+
+  if (whichList.includes("list1")) {
+    localStorage.setItem("items1", JSON.stringify(items1));
+  } else if (whichList.includes("list2")) {
+    localStorage.setItem("items2", JSON.stringify(items2));
+  } else {
+    localStorage.setItem("items3", JSON.stringify(items3));
+  }
 }
 function restoreFromLocalStorage() {
-  const storageItems = JSON.parse(localStorage.getItem("items"));
-  if (storageItems) {
-    items = storageItems; //items.push(...storageItems);
+  const storageItems1 = JSON.parse(localStorage.getItem("items1"));
+  if (storageItems1) {
+    items1 = storageItems1; //items.push(...storageItems);
     list1.dispatchEvent(new CustomEvent("itemsUpdated"));
+  }
+  const storageItems2 = JSON.parse(localStorage.getItem("items2"));
+  if (storageItems2) {
+    items2 = storageItems2; //items.push(...storageItems);
+    list2.dispatchEvent(new CustomEvent("itemsUpdated"));
+  }
+  const storageItems3 = JSON.parse(localStorage.getItem("items3"));
+  if (storageItems3) {
+    items3 = storageItems3; //items.push(...storageItems);
+    list3.dispatchEvent(new CustomEvent("itemsUpdated"));
   }
 }
 
 function deleteItems(id) {
-  items = items.filter((item) => item.id !== id);
+  items1 = items1.filter((item) => item.id !== id);
+  items2 = items2.filter((item) => item.id !== id);
+  items3 = items3.filter((item) => item.id !== id);
   //filtrujemy tablicę i zostawiamy tylko te, które są inne
-  list1.dispatchEvent(new CustomEvent("itemsUpdated"));
+  lists.forEach((list) => list.dispatchEvent(new CustomEvent("itemsUpdated")));
   //dzięki temu od razu poprawi listę i zapisze w local storage wow!
 }
 
 function markAsComplete(id) {
-  const itemRef = items.find((item) => item.id === id);
-  itemRef.complete = !itemRef.complete; //zamieni false na true i odwrotnie
-  list1.dispatchEvent(new CustomEvent("itemsUpdated"));
+  console.log(id);
+  const itemRef1 = items1.find((item) => item.id === id);
+  const itemRef2 = items2.find((item) => item.id === id);
+  const itemRef3 = items3.find((item) => item.id === id);
+  if (itemRef1) {
+    itemRef1.complete = !itemRef1.complete;
+  } else if (itemRef2) {
+    itemRef2.complete = !itemRef2.complete;
+  } else if (itemRef3) {
+    itemRef3.complete = !itemRef3.complete;
+  }
+
+  lists.forEach((list) => list.dispatchEvent(new CustomEvent("itemsUpdated")));
 }
 
-form1.addEventListener("submit", handleSubmit); //enter, button i click
-list1.addEventListener("itemsUpdated", displayItems);
-list1.addEventListener("itemsUpdated", mirrorToLocalStorage);
-//event delegation - listening on elements that we add dynamically
-list1.addEventListener("click", function (e) {
-  const id = parseInt(e.target.value); //potrzebna liczba, aby filter w deleteItems() działał poprawnie
-  if (e.target.matches("button")) {
-    //dotyczy selektora
-    deleteItems(id);
-  } //target - co faktycznie kliknięte
-  if (e.target.matches('input[type="checkbox"]')) {
-    markAsComplete(id);
-  }
-});
+forms.forEach((form) => form.addEventListener("submit", handleSubmit));
+lists.forEach((list) => list.addEventListener("itemsUpdated", displayItems));
+lists.forEach((list) =>
+  list.addEventListener("itemsUpdated", mirrorToLocalStorage)
+);
 
-restoreFromLocalStorage(); //odpalane na starcie
+lists.forEach((list) =>
+  list.addEventListener("click", function (e) {
+    const id = parseInt(e.target.value);
+    if (e.target.matches("button")) {
+      deleteItems(id);
+    }
+    if (e.target.matches('input[type="checkbox"]')) {
+      markAsComplete(id);
+    }
+  })
+);
+
+restoreFromLocalStorage();

@@ -58,11 +58,9 @@ function displayItems() {
     .join("");
   list1.innerHTML = html;
 }
-
 function mirrorToLocalStorage() {
   localStorage.setItem("items", JSON.stringify(items));
 }
-
 function restoreFromLocalStorage() {
   const storageItems = JSON.parse(localStorage.getItem("items"));
   if (storageItems) {

@@ -11,10 +11,27 @@ const list1 = document.querySelector(".shopping-list__list1--js");
 const list2 = document.querySelector(".shopping-list__list2--js");
 const list3 = document.querySelector(".shopping-list__list3--js");
 const lists = document.querySelectorAll(".shopping-list__list");
+const editButtons = document.querySelectorAll(".shopping-list__buttonEdit");
+const headers = document.querySelectorAll(".shopping-list__header");
 
 let items1 = [];
 let items2 = [];
 let items3 = [];
+let headersArray = [];
+
+headers.forEach((header) => headersArray.push(header.textContent));
+
+function editHeader(e) {
+  e.preventDefault();
+
+  const header = e.currentTarget.previousElementSibling;
+  console.log(header.id);
+  const newHeader = prompt();
+  header.textContent = newHeader;
+  headersArray[header.id] = newHeader;
+
+  localStorage.setItem("headers", JSON.stringify(headersArray));
+}
 
 function handleSubmit(e) {
   e.preventDefault();
@@ -143,6 +160,16 @@ function restoreFromLocalStorage() {
     items3 = storageItems3; //items.push(...storageItems);
     list3.dispatchEvent(new CustomEvent("itemsUpdated"));
   }
+
+  const storageHeaders = JSON.parse(localStorage.getItem("headers"));
+  if (storageHeaders) {
+    headersArray = storageHeaders;
+    for (let i = 0; i < headersArray.length; i++) {
+      headers[i].textContent = headersArray[i];
+    }
+  } else {
+    localStorage.setItem("headers", JSON.stringify(headersArray));
+  }
 }
 
 function deleteItems(id) {
@@ -167,6 +194,9 @@ function markAsComplete(id) {
   lists.forEach((list) => list.dispatchEvent(new CustomEvent("itemsUpdated")));
 }
 
+editButtons.forEach((editButton) =>
+  editButton.addEventListener("click", editHeader)
+);
 forms.forEach((form) => form.addEventListener("submit", handleSubmit));
 lists.forEach((list) => list.addEventListener("itemsUpdated", displayItems));
 lists.forEach((list) =>

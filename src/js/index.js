@@ -12,7 +12,6 @@ const list2 = document.querySelector(".shopping-list__list2--js");
 const list3 = document.querySelector(".shopping-list__list3--js");
 const lists = document.querySelectorAll(".shopping-list__list");
 
-//an array to hold the state of app
 let items1 = [];
 let items2 = [];
 let items3 = [];
@@ -31,15 +30,12 @@ function handleSubmit(e) {
   const whichForm = e.target.classList.value;
   if (whichForm.includes("form1")) {
     items1.push(item);
-    console.log("wypełniasz kosmetyki");
   } else if (whichForm.includes("form2")) {
     items2.push(item);
-    console.log("wypełniasz leki");
   } else {
     items3.push(item);
-    console.log("wypełniasz chemia");
   }
-  e.target.reset(); //e.currentTarget.item.value = ""; - clear the form
+  e.target.reset();
   lists.forEach((list) => list.dispatchEvent(new CustomEvent("itemsUpdated")));
 }
 
@@ -153,9 +149,7 @@ function deleteItems(id) {
   items1 = items1.filter((item) => item.id !== id);
   items2 = items2.filter((item) => item.id !== id);
   items3 = items3.filter((item) => item.id !== id);
-  //filtrujemy tablicę i zostawiamy tylko te, które są inne
   lists.forEach((list) => list.dispatchEvent(new CustomEvent("itemsUpdated")));
-  //dzięki temu od razu poprawi listę i zapisze w local storage wow!
 }
 
 function markAsComplete(id) {
@@ -170,7 +164,6 @@ function markAsComplete(id) {
   } else if (itemRef3) {
     itemRef3.complete = !itemRef3.complete;
   }
-
   lists.forEach((list) => list.dispatchEvent(new CustomEvent("itemsUpdated")));
 }
 

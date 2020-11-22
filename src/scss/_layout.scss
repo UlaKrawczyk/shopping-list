@@ -47,7 +47,27 @@ body {
     margin-bottom: 1rem;
     font-family: var(--font-header);
     font-size: 1.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
+
+  &__buttonEdit {
+    background-color: var(--color-bgc-green);
+    color: var(--color-bgc-silver);
+    border: none;
+    border-radius: 0.15rem;
+    padding: 4px 9px 6px 7px;
+    font-size: 1.3rem;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+  }
+
+  &__buttonEdit span {
+    transform: rotate(140deg);
+  }
+
   &__form {
     display: grid;
     grid-template-columns: 1fr auto;

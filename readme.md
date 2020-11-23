@@ -1,6 +1,6 @@
 **If you want to try it out, click here: [Shopping List](https://ulakrawczyk.github.io/shopping-list/)**
 
-![cover page](desktop-1.png)
+![cover page](public/desktop-1.png)
 
 ### This is a PWA APP letting you to remember what to buy next
 
@@ -11,7 +11,7 @@
 - js with localstorage
 - rwd
 
-![mobile view](mobile-1.png)
+![mobile view](public/mobile-1.png)
 
 ## Page is based on WTF Webpack Starter Kit
 

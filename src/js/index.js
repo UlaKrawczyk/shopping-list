@@ -18,18 +18,14 @@ let items1 = [];
 let items2 = [];
 let items3 = [];
 let headersArray = [];
-
 headers.forEach((header) => headersArray.push(header.textContent));
 
 function editHeader(e) {
   e.preventDefault();
-
   const header = e.currentTarget.previousElementSibling;
-  console.log(header.id);
   const newHeader = prompt();
   header.textContent = newHeader;
   headersArray[header.id] = newHeader;
-
   localStorage.setItem("headers", JSON.stringify(headersArray));
 }
 

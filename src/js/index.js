@@ -18,7 +18,7 @@ let items1 = [];
 let items2 = [];
 let items3 = [];
 let headersArray = [];
-headers.forEach((header) => headersArray.push(header.textContent));
+headers.forEach((header) => headersArray.push(header.innerText));
 
 function editHeader(e) {
   e.preventDefault();

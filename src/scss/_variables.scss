@@ -10,22 +10,10 @@
   --font-header: "Indie Flower", cursive;
 
   --shadow-box-big: 0 1rem 1.4rem rgba(68, 70, 85, 0.4);
-  --shadow-button: 0 1rem 2rem rgba(68, 70, 85, 0.2);
-  --shadow-button-active: 0 0.5rem 1rem rgba(68, 70, 85, 0.2);
-
   --line-grey-light: 1px solid var(--color-grey-light);
 }
-$bp-big: 96em; //1536px
-$bp-big-less: 85.3em; //1366px
-$bp-largest: 80em; //1280px
-$bp-large: 68.75em; //1100px
-$bp-large-mobile: 64em; //1024px
-$bp-medium: 56.25em; //900px
-$bp-medium-grid: 52.2em; //835px
-$bp-medium-tablet: 46.875em; //750px
-$bp-small: 41.25em; //660px
-$bp-smallest: 30.94em; //496px
-$bp-tiny-big: 26em; //416px
+
+$bp-smallest: 30.94em; //496px użyte w margin li
 $bp-tiny: 23.44em; //375px użyte w h1
 
 *,

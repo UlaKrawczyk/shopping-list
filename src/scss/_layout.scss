@@ -6,6 +6,7 @@ body {
   background-color: var(--color-bgc-green);
   color: var(--color-grey);
 }
+
 .header {
   min-height: 15vh;
   display: grid;
@@ -42,6 +43,10 @@ body {
   border-radius: 0.15rem;
   box-shadow: var(--shadow-box-big);
 
+  @media only screen and (max-width: $bp-tiny) {
+    padding: 1.2rem 1.8rem;
+  }
+
   &__header-wrapper {
     display: flex;
     align-items: center;
@@ -64,10 +69,10 @@ body {
     cursor: pointer;
     display: grid;
     place-items: center;
-  }
 
-  &__buttonEdit span {
-    transform: rotate(140deg);
+    & span {
+      transform: rotate(140deg);
+    }
   }
 
   &__form {
@@ -83,11 +88,11 @@ body {
     padding: 0.5rem 1rem;
     font-family: inherit;
     color: inherit;
-  }
-  &__input:focus {
-    outline: none;
-    // box-shadow: 0 0 0 2px var(--color-red);
-    border: 1px solid var(--color-red);
+
+    &:focus {
+      outline: none;
+      border: 1px solid var(--color-red);
+    }
   }
 
   &__button {
@@ -101,6 +106,7 @@ body {
     cursor: pointer;
     transition: transform 0.2s;
   }
+
   &__list {
     list-style: none;
     margin: 0;
@@ -108,13 +114,20 @@ body {
   }
 
   &__item {
-    padding: 1rem 0;
+    padding: 0.8rem 0;
     color: var(--color-grey);
     display: grid;
     grid-template-columns: 1fr auto;
     grid-gap: 1rem;
     align-items: center;
-    border-bottom: var(--line-grey-light);
+
+    &:not(:last-child) {
+      border-bottom: var(--line-grey-light);
+    }
+
+    @media only screen and (max-width: $bp-smallest) {
+      padding: 0.5rem 0;
+    }
   }
 }
 
@@ -171,6 +184,7 @@ body {
   cursor: pointer;
   transition: transform 0.2s;
 }
+
 .shopping-list__item button:hover {
   transform: scale(1.3);
 }

@@ -1,12 +1,19 @@
-![cover](https://cotenfrontend.pl/img/cover.png)
+**If you want to try it out, click here: [Shopping List](https://ulakrawczyk.github.io/shopping-list/)**
 
-# WTF Webpack Starter Kit 
+![cover page](desktop-1.png)
 
-Simple toolkit for your static websites development.
+### This is a PWA APP letting you to remember what to buy next
 
-## How to use it?
+### To create it, i use:
 
-Click on `Use this template` button to generate a new repository based on this starter kit. After that clone it to your computer, go to the project directory in console and type `npm install`.
+- html5, css 3 and sass
+- css3 with grid and flexbox layout
+- js with localstorage
+- rwd
+
+![mobile view](mobile-1.png)
+
+## Page is based on WTF Webpack Starter Kit
 
 ## Available scripts
 
@@ -15,4 +22,3 @@ Click on `Use this template` button to generate a new repository based on this s
 `npm run build` - runs build process for production
 
 `npm run publish` - runs build process and publish the page using `gh-pages` branch
-

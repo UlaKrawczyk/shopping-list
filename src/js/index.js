@@ -1,56 +1,43 @@
 import "../scss/main.scss";
 ("use strict");
-
 import { registerSW } from "./pwa.js";
 registerSW();
 
-const forms = document.querySelectorAll(".shopping-list__form");
-const list1 = document.querySelector(".shopping-list__list1--js");
-const list2 = document.querySelector(".shopping-list__list2--js");
-const list3 = document.querySelector(".shopping-list__list3--js");
-const lists = document.querySelectorAll(".shopping-list__list");
-const editButtons = document.querySelectorAll(".shopping-list__buttonEdit");
-const headers = document.querySelectorAll(".shopping-list__header");
-
-let items1 = [];
-let items2 = [];
-let items3 = [];
-let headersArray = [];
-headers.forEach((header) => headersArray.push(header.innerText));
-
-function editHeader(e) {
-  e.preventDefault();
-  const header = e.currentTarget.previousElementSibling;
-  const newHeader = prompt();
-  header.textContent = newHeader;
-  headersArray[header.id] = newHeader;
-  localStorage.setItem("headers", JSON.stringify(headersArray));
-}
-function handleSubmit(e) {
-  e.preventDefault();
-  const name = e.currentTarget.item.value;
-  if (!name) return;
-  const item = {
-    name: name,
-    id: Date.now(),
-    complete: false,
-  };
-  const whichForm = e.target.classList.value;
-  if (whichForm.includes("form1")) {
-    items1.push(item);
-  } else if (whichForm.includes("form2")) {
-    items2.push(item);
-  } else {
-    items3.push(item);
+function ShoppingList(shoppingList) {
+  if (!shoppingList) {
+    throw new Error("No shopping list found!");
   }
-  e.target.reset();
-  lists.forEach((list) => list.dispatchEvent(new CustomEvent("itemsUpdated")));
-}
+  const header = shoppingList.querySelector(".shopping-list__header");
+  const editButton = shoppingList.querySelector(".shopping-list__buttonEdit");
+  const form = shoppingList.querySelector(".shopping-list__form");
+  const list = shoppingList.querySelector(".shopping-list__list");
 
-function displayItems(e) {
-  const whichList = e.target.classList.value;
-  if (whichList.includes("list1")) {
-    const html = items1
+  let listId = shoppingList.id;
+  let items = [];
+
+  function editHeader(e) {
+    e.preventDefault();
+    const newHeader = prompt();
+    header.textContent = newHeader;
+    localStorage.setItem(`header${listId}`, header.textContent);
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    const name = e.currentTarget.item.value;
+    if (!name) return;
+    const item = {
+      name: name,
+      id: Date.now(),
+      complete: false,
+    };
+    items.push(item);
+    e.target.reset();
+    list.dispatchEvent(new CustomEvent("itemsUpdated"));
+  }
+
+  function displayItems() {
+    const html = items
       .map(
         (item) => `<li class="shopping-list__item">
       <input 
@@ -72,125 +59,43 @@ function displayItems(e) {
       </li>`
       )
       .join("");
-    list1.innerHTML = html;
-  } else if (whichList.includes("list2")) {
-    const html = items2
-      .map(
-        (item) => `<li class="shopping-list__item">
-      <input 
-        type="checkbox" 
-        id="check + ${item.id}"
-        value="${item.id}"
-        ${item.complete ? "checked" : ""}
-      >
-      <label 
-        class="itemName"
-        for="check + ${item.id}"
-      >
-      <span class="shopping-list__newCheckbox"></span>
-      ${item.name}</label>
-      <button 
-        value="${item.id}" 
-        aria-label="remove ${item.name}"
-      >&times;</button>
-      </li>`
-      )
-      .join("");
-    list2.innerHTML = html;
-  } else {
-    const html = items3
-      .map(
-        (item) => `<li class="shopping-list__item">
-      <input 
-        type="checkbox" 
-        id="check + ${item.id}"
-        value="${item.id}"
-        ${item.complete ? "checked" : ""}
-      >
-      <label 
-        class="itemName"
-        for="check + ${item.id}"
-      >
-      <span class="shopping-list__newCheckbox"></span>
-      ${item.name}</label>
-      <button 
-        value="${item.id}" 
-        aria-label="remove ${item.name}"
-      >&times;</button>
-      </li>`
-      )
-      .join("");
-    list3.innerHTML = html;
+    list.innerHTML = html;
   }
-}
-function mirrorToLocalStorage(e) {
-  const whichList = e.target.classList.value;
 
-  if (whichList.includes("list1")) {
-    localStorage.setItem("items1", JSON.stringify(items1));
-  } else if (whichList.includes("list2")) {
-    localStorage.setItem("items2", JSON.stringify(items2));
-  } else {
-    localStorage.setItem("items3", JSON.stringify(items3));
+  function mirrorToLocalStorage() {
+    localStorage.setItem(`items${listId}`, JSON.stringify(items));
   }
-}
-function restoreFromLocalStorage() {
-  const storageItems1 = JSON.parse(localStorage.getItem("items1"));
-  if (storageItems1) {
-    items1 = storageItems1; //items.push(...storageItems);
-    list1.dispatchEvent(new CustomEvent("itemsUpdated"));
-  }
-  const storageItems2 = JSON.parse(localStorage.getItem("items2"));
-  if (storageItems2) {
-    items2 = storageItems2; //items.push(...storageItems);
-    list2.dispatchEvent(new CustomEvent("itemsUpdated"));
-  }
-  const storageItems3 = JSON.parse(localStorage.getItem("items3"));
-  if (storageItems3) {
-    items3 = storageItems3; //items.push(...storageItems);
-    list3.dispatchEvent(new CustomEvent("itemsUpdated"));
-  }
-  const storageHeaders = JSON.parse(localStorage.getItem("headers"));
-  if (storageHeaders) {
-    headersArray = storageHeaders;
-    for (let i = 0; i < headersArray.length; i++) {
-      headers[i].textContent = headersArray[i];
+
+  function restoreFromLocalStorage() {
+    const storageItems = JSON.parse(localStorage.getItem(`items${listId}`));
+    if (storageItems) {
+      (items = storageItems),
+        list.dispatchEvent(new CustomEvent("itemsUpdated"));
     }
-  } else {
-    localStorage.setItem("headers", JSON.stringify(headersArray));
-  }
-}
 
-function deleteItems(id) {
-  items1 = items1.filter((item) => item.id !== id);
-  items2 = items2.filter((item) => item.id !== id);
-  items3 = items3.filter((item) => item.id !== id);
-  lists.forEach((list) => list.dispatchEvent(new CustomEvent("itemsUpdated")));
-}
-function markAsComplete(id) {
-  console.log(id);
-  const itemRef1 = items1.find((item) => item.id === id);
-  const itemRef2 = items2.find((item) => item.id === id);
-  const itemRef3 = items3.find((item) => item.id === id);
-  if (itemRef1) {
-    itemRef1.complete = !itemRef1.complete;
-  } else if (itemRef2) {
-    itemRef2.complete = !itemRef2.complete;
-  } else if (itemRef3) {
-    itemRef3.complete = !itemRef3.complete;
+    const storageHeader = localStorage.getItem(`header${listId}`);
+    if (storageHeader) {
+      header.textContent = storageHeader;
+    } else {
+      localStorage.setItem(`header${listId}`, header.textContent);
+    }
   }
-  lists.forEach((list) => list.dispatchEvent(new CustomEvent("itemsUpdated")));
-}
 
-editButtons.forEach((editButton) =>
-  editButton.addEventListener("click", editHeader)
-);
-forms.forEach((form) => form.addEventListener("submit", handleSubmit));
-lists.forEach((list) => list.addEventListener("itemsUpdated", displayItems));
-lists.forEach((list) =>
-  list.addEventListener("itemsUpdated", mirrorToLocalStorage)
-);
-lists.forEach((list) =>
+  function deleteItems(id) {
+    items = items.filter((item) => item.id !== id);
+    list.dispatchEvent(new CustomEvent("itemsUpdated"));
+  }
+
+  function markAsComplete(id) {
+    const itemRef = items.find((item) => item.id === id);
+    itemRef.complete = !itemRef.complete;
+    list.dispatchEvent(new CustomEvent("itemsUpdated"));
+  }
+
+  editButton.addEventListener("click", editHeader);
+  form.addEventListener("submit", handleSubmit); //enter, button i click
+  list.addEventListener("itemsUpdated", displayItems);
+  list.addEventListener("itemsUpdated", mirrorToLocalStorage);
   list.addEventListener("click", function (e) {
     const id = parseInt(e.target.value);
     if (e.target.matches("button")) {
@@ -199,6 +104,9 @@ lists.forEach((list) =>
     if (e.target.matches('input[type="checkbox"]')) {
       markAsComplete(id);
     }
-  })
-);
-restoreFromLocalStorage();
+  });
+  restoreFromLocalStorage();
+}
+const shoppingList1 = ShoppingList(document.querySelector(".shopping-list-1"));
+const shoppingList2 = ShoppingList(document.querySelector(".shopping-list-2"));
+const shoppingList3 = ShoppingList(document.querySelector(".shopping-list-3"));

@@ -1,11 +1,9 @@
 import "../scss/main.scss";
 ("use strict");
 
-// uncomment the lines below to enable PWA
 import { registerSW } from "./pwa.js";
 registerSW();
 
-/* place your code below */
 const forms = document.querySelectorAll(".shopping-list__form");
 const list1 = document.querySelector(".shopping-list__list1--js");
 const list2 = document.querySelector(".shopping-list__list2--js");
@@ -28,18 +26,15 @@ function editHeader(e) {
   headersArray[header.id] = newHeader;
   localStorage.setItem("headers", JSON.stringify(headersArray));
 }
-
 function handleSubmit(e) {
   e.preventDefault();
   const name = e.currentTarget.item.value;
   if (!name) return;
-
   const item = {
     name: name,
     id: Date.now(),
     complete: false,
   };
-
   const whichForm = e.target.classList.value;
   if (whichForm.includes("form1")) {
     items1.push(item);
@@ -54,7 +49,6 @@ function handleSubmit(e) {
 
 function displayItems(e) {
   const whichList = e.target.classList.value;
-
   if (whichList.includes("list1")) {
     const html = items1
       .map(
@@ -156,7 +150,6 @@ function restoreFromLocalStorage() {
     items3 = storageItems3; //items.push(...storageItems);
     list3.dispatchEvent(new CustomEvent("itemsUpdated"));
   }
-
   const storageHeaders = JSON.parse(localStorage.getItem("headers"));
   if (storageHeaders) {
     headersArray = storageHeaders;
@@ -174,7 +167,6 @@ function deleteItems(id) {
   items3 = items3.filter((item) => item.id !== id);
   lists.forEach((list) => list.dispatchEvent(new CustomEvent("itemsUpdated")));
 }
-
 function markAsComplete(id) {
   console.log(id);
   const itemRef1 = items1.find((item) => item.id === id);
@@ -198,7 +190,6 @@ lists.forEach((list) => list.addEventListener("itemsUpdated", displayItems));
 lists.forEach((list) =>
   list.addEventListener("itemsUpdated", mirrorToLocalStorage)
 );
-
 lists.forEach((list) =>
   list.addEventListener("click", function (e) {
     const id = parseInt(e.target.value);
@@ -210,5 +201,4 @@ lists.forEach((list) =>
     }
   })
 );
-
 restoreFromLocalStorage();

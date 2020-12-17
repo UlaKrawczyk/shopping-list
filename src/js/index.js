@@ -105,6 +105,7 @@ function ShoppingList(shoppingList) {
       markAsComplete(id);
     }
   });
+
   restoreFromLocalStorage();
 }
 const shoppingList1 = ShoppingList(document.querySelector(".shopping-list-1"));
